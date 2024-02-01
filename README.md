@@ -8,9 +8,6 @@ import z from "zod";
 
 const { returned, mutated } = r();
 
-/**
- *
- */
 const queryResult = await returned(
   // The return schema you expect
   z.string(),
