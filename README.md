@@ -10,7 +10,11 @@ const { returned } = r();
 
 const myQuery = async () => await fetch("www.foobar.com").json();
 
-const result = await returned(z.string(), myQuery);
+const result = await returned(
+  z.string(), // The return schema you expect
+  myQuery, // Any async unit function
+  "myQuery" // A key by which to identify the query
+);
 
 if (result.success) {
   // Do something...

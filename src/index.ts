@@ -11,7 +11,7 @@ export const STORE = {
 };
 
 export default (
-  { store = voidStore() }: ClientOpts = { store: voidStore() }
+  { store = memoryStore() }: ClientOpts = { store: memoryStore() }
 ) => {
   const returned = async <Z extends z.ZodType<any, any>>(
     schema: Z,
