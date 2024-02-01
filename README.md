@@ -6,17 +6,56 @@ Simple caching & async query validation using zod, inspired by [Tanstack Query](
 import r from "returned";
 import z from "zod";
 
-const { returned } = r();
-
-const myQuery = async () => await fetch("www.foobar.com").json();
+const { returned, mutated } = r();
 
 const result = await returned(
-  z.string(), // The return schema you expect
-  myQuery, // Any async unit function
-  "myQuery" // A key by which to identify the query
+  // The return schema you expect
+  z.string(),
+  // Any async unit function
+  await fetch("www.foobar.com").json(),
+  // A key by which to identify the query
+  "myQuery"
 );
 
 if (result.success) {
-  // Do something...
+  const { data } = result; // data: number
+  // Do something with 'result'
 }
+```
+
+## Custom Stores
+
+Returned provides a `store` interface to facilitate caching:
+
+```typescript
+type ReturnedStore = {
+  get: <T>(key: string) => z.SafeParseSuccess<T> | undefined;
+  set: <T>(key: string, value: z.SafeParseSuccess<T>) => void;
+  del: (key: string) => void;
+  clear: () => void;
+};
+```
+
+Out of the box, 2 `ReturnedStore` implementations are provided:
+
+### `STORE.VOID`
+
+A no-op, if you wish to disable caching.
+
+```typescript
+import r, { STORE } from "returned";
+
+const { returned, mutated } = r({ store: STORE.VOID() });
+```
+
+### `STORE.MEMORY`
+
+An in-memory LRU cache, with customizable max size.
+
+This is the default behavior, with size 100.
+
+```typescript
+import r, { STORE } from "returned";
+
+const { returned, mutated } = r({ store: STORE.MEMORY(100) });
 ```

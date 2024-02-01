@@ -12,28 +12,30 @@ export const STORE = {
 
 export default (
   { store = memoryStore() }: ClientOpts = { store: memoryStore() }
-) => {
-  const returned = async <Z extends z.ZodType<any, any>>(
-    schema: Z,
-    query: () => Promise<unknown>,
-    key?: string
-  ) => {
-    const cached = key ? store.get<z.infer<Z>>(key) : undefined;
-
-    return cached ? cached : schema.safeParse(await query());
-  };
-
-  const mutated = async <Z extends z.ZodType<any, any>>(
-    schema: Z,
+) => ({
+  mutated: async <Z extends z.ZodType<any, any>>(
+    { safeParse }: Z,
     mutation: () => Promise<unknown>,
     invalidates: string[] = []
-  ) => {
-    const result = schema.safeParse(await mutation());
-
+  ): Promise<z.SafeParseReturnType<z.infer<Z>, z.infer<Z>>> => {
+    const result = safeParse(await mutation());
     if (result.success) invalidates.forEach(store.del);
 
     return result;
-  };
+  },
+  returned: async <Z extends z.ZodType<any, any, any>>(
+    { safeParse }: Z,
+    query: () => Promise<unknown>,
+    key?: string
+  ): Promise<z.SafeParseReturnType<z.infer<Z>, z.infer<Z>>> => {
+    if (key) {
+      const cached = store.get<z.infer<Z>>(key);
+      if (cached) return cached;
+    }
+    const res = safeParse(await query());
+    if (res.success && key) store.set(key, res);
 
-  return { mutated, returned, store };
-};
+    return res;
+  },
+  store,
+});
