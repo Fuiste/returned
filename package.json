@@ -1,0 +1,25 @@
+{
+  "name": "returned",
+  "version": "0.0.1",
+  "description": "Simple, expressive validation. Powered by Zod",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "bun test"
+  },
+  "keywords": [
+    "zod",
+    "validation",
+    "fp"
+  ],
+  "author": "William Pelrine",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "zod": "^3.22.4"
+  }
+}
