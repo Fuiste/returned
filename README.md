@@ -12,7 +12,7 @@ const queryResult = await returned(
   // The return schema you expect
   z.string(),
   // Any async unit function
-  await fetch("www.foobar.com").json(),
+  async () => await fetch("www.foobar.com").json(),
   // A key by which to identify the query
   "myQuery"
 );
@@ -27,7 +27,7 @@ const mutationResult = await mutated(
   // The return schema you expect
   z.string(),
   // Any async unit function
-  await fetch("www.foobar.com", { method: "POST" }).json(),
+  async () => await fetch("www.foobar.com", { method: "POST" }).json(),
   // An array of keys to invalidate upon success
   ["myQuery"]
 );
