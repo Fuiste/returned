@@ -23,8 +23,7 @@ export const memoryStore = (size = 100): ReturnedStore => {
     get: <T>(key: string) => store[key] as z.SafeParseSuccess<T> | undefined,
     set: (key, value) => {
       if (curSz >= size) {
-        const oldest = keys.shift();
-        delete store[oldest!];
+        delete store[keys.shift()!];
         curSz--;
       }
 

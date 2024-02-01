@@ -2,6 +2,8 @@ import { describe, it, expect } from "bun:test";
 import { STORE } from ".";
 import { z } from "zod";
 
+const value = z.number().safeParse(1) as z.SafeParseSuccess<number>;
+
 describe("void store", () => {
   const store = STORE.VOID();
 
@@ -10,7 +12,7 @@ describe("void store", () => {
   });
 
   it("returns undefined for set", () => {
-    store.set("key", 1);
+    store.set("key", value);
     expect(store.get("key")).toBeUndefined();
   });
 });
@@ -20,7 +22,7 @@ describe("in-memory store", () => {
     const store = STORE.MEMORY(1);
     const key = "key";
 
-    store.set(key, z.number().safeParse(1) as z.SafeParseSuccess<number>);
+    store.set(key, value);
 
     expect(store.get("foobar")).toBeUndefined();
   });
@@ -28,7 +30,6 @@ describe("in-memory store", () => {
   it("returns the value for hits", () => {
     const store = STORE.MEMORY(1);
     const key = "key";
-    const value = z.number().safeParse(1) as z.SafeParseSuccess<number>;
 
     store.set(key, value);
 
@@ -39,7 +40,6 @@ describe("in-memory store", () => {
     const store = STORE.MEMORY(1);
     const key1 = "key1";
     const key2 = "key2";
-    const value = z.number().safeParse(1) as z.SafeParseSuccess<number>;
 
     store.set(key1, value);
     store.set(key2, value);

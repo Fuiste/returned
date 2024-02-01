@@ -1,15 +1,18 @@
 # returned
 
-To install dependencies:
+Simple caching & async query validation using zod, inspired by [Tanstack Query](https://tanstack.com/query/latest)
 
-```bash
-bun install
+```typescript
+import r from "returned";
+import z from "zod";
+
+const { returned } = r();
+
+const myQuery = async () => await fetch("www.foobar.com").json();
+
+const result = await returned(z.string(), myQuery);
+
+if (result.success) {
+  // Do something...
+}
 ```
-
-To run:
-
-```bash
-bun run src/index.ts
-```
-
-This project was created using `bun init` in bun v1.0.22. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
