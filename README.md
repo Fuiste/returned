@@ -8,7 +8,10 @@ import z from "zod";
 
 const { returned, mutated } = r();
 
-const result = await returned(
+/**
+ *
+ */
+const queryResult = await returned(
   // The return schema you expect
   z.string(),
   // Any async unit function
@@ -17,9 +20,25 @@ const result = await returned(
   "myQuery"
 );
 
-if (result.success) {
-  const { data } = result; // data: number
-  // Do something with 'result'
+if (queryResult.success) {
+  const { data } = queryResult; // data: number
+
+  // ...do something with 'result'
+}
+
+const mutationResult = await mutated(
+  // The return schema you expect
+  z.string(),
+  // Any async unit function
+  await fetch("www.foobar.com", { method: "POST" }).json(),
+  // An array of keys to invalidate upon success
+  ["myQuery"]
+);
+
+if (mutationResult.success) {
+  const { data } = mutationResult; // data: number
+
+  // ...do something with 'result'
 }
 ```
 
